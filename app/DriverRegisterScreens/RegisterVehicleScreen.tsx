@@ -14,29 +14,27 @@ const RegisterVehicleScreen: React.FC = () => {
   };
 
   const handleItemPress = (item: string) => {
-    console.log(${item} pressed);
+    console.log(`${item} pressed`);
     switch(item){
       case 'Owner Documents':
-        // FIX: Cast pathname to RelativePathString for '/'
         router.push({ pathname: '/' as RelativePathString }); 
         break;
       case 'Vehicle Information':
         router.push({ pathname: '/DriverRegisterScreens/VehicleInformationScreen' as RelativePathString }); 
         break;
       case 'Driver Information':
-        // FIX: Cast pathname to RelativePathString for '/'
+        
         router.push({ pathname: '/' as RelativePathString }); 
         break;
       case 'Profile Photo':
-        // FIX: Cast pathname to RelativePathString for '/'
+        
         router.push({ pathname: '/' as RelativePathString }); 
         break;
       case 'Payment':
-        // FIX: Cast pathname to RelativePathString for '/'
         router.push({ pathname: '/' as RelativePathString }); 
         break;
       default:
-        console.log(No specific nav logic for: ${item});
+        console.log(`No specific nav logic for: ${item}`);
         break;
     }
   };

@@ -25,7 +25,7 @@ const VehicleInformationScreen: React.FC = () => {
   };
 
   const handleItemPress = (item: string) => {
-    console.log(${item} pressed);
+    console.log(`${item} pressed`);
 
     switch (item){
       case 'Vehicle Details':
@@ -41,7 +41,7 @@ const VehicleInformationScreen: React.FC = () => {
         router.push({pathname: '/' as RelativePathString});
         break;
       default:
-        console.log(No specific nav logic for: ${item});
+        console.log(`No specific nav logic for: ${item}`);
         break;
     }
   };
