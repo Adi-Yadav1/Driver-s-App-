@@ -17,7 +17,7 @@ const RegisterVehicleScreen: React.FC = () => {
     console.log(`${item} pressed`);
     switch(item){
       case 'Owner Documents':
-        router.push({ pathname: '/' as RelativePathString }); 
+        router.push({ pathname: '/home/MainPage.tsx' as RelativePathString }); 
         break;
       case 'Vehicle Information':
         router.push({ pathname: '/DriverRegisterScreens/VehicleInformationScreen' as RelativePathString }); 

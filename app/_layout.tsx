@@ -10,7 +10,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    // Ensure this font file exists in assets/fonts/
     Poppins: require('../assets/fonts/Poppins-Bold.ttf'),
   });
 
@@ -24,7 +23,6 @@ export default function RootLayout() {
         <Stack.Screen name="DriverRegisterScreens/RegisterVehicleScreen" options={{ headerShown: false }} />
         <Stack.Screen name="DriverRegisterScreens/VehicleInformationScreen" options={{ headerShown: false }} />
         <Stack.Screen name="DriverRegisterScreens/VehicleDetailsScreen" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> 
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
