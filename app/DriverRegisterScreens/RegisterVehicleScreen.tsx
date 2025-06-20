@@ -21,7 +21,7 @@ const RegisterVehicleScreen: React.FC = () => {
         router.push({ pathname: '/' as RelativePathString }); 
         break;
       case 'Vehicle Information':
-        router.push({ pathname: '/Screens/VehicleInformationScreen' as RelativePathString }); 
+        router.push({ pathname: '/DriverRegisterScreens/VehicleInformationScreen' as RelativePathString }); 
         break;
       case 'Driver Information':
         // FIX: Cast pathname to RelativePathString for '/'
