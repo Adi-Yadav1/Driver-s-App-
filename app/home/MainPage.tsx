@@ -301,6 +301,8 @@ import Animated, {
 import { rideService, type Ride } from '../../api/rideService';
 import RideCardStack from '../ride/RideCardStack';
 import { useRouter } from 'expo-router';
+import { ThemedView } from '../../components/ThemedView'; 
+import { ThemedText } from '../../components/ThemedText'; 
 
 const userAvatar = require('../../assets/images/avator.png');
 
