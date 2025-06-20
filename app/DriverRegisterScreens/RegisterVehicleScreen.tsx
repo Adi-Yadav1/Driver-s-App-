@@ -9,15 +9,13 @@ const RegisterVehicleScreen: React.FC = () => {
 
   const handleClose = () => {
     console.log('Close button pressed');
-    // Implement navigation logic for closing this screen, e.g., router.back()
-    // Example: router.back(); or router.push('/');
   };
 
   const handleItemPress = (item: string) => {
     console.log(`${item} pressed`);
     switch(item){
       case 'Owner Documents':
-        router.push({ pathname: '/home/MainPage.tsx' as RelativePathString }); 
+        router.push({ pathname: '/home/MainPage' as RelativePathString }); 
         break;
       case 'Vehicle Information':
         router.push({ pathname: '/DriverRegisterScreens/VehicleInformationScreen' as RelativePathString }); 

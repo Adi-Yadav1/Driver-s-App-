@@ -1,3 +1,4 @@
+// app/ride_completed.tsx
 import React, { useState } from "react";
 import {
   View,

@@ -1,3 +1,4 @@
+// app/bonus/BonusScreen.tsx
 import React from 'react';
 import { View, Text } from 'react-native';
 

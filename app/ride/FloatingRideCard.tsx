@@ -1,3 +1,4 @@
+// app/ride/FloatingRideCard.tsx
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import Slider from '@react-native-community/slider';

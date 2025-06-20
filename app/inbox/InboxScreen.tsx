@@ -1,3 +1,4 @@
+// app/inbox/InboxScreen.tsx
 import React from 'react';
 import { View, Text } from 'react-native';
 

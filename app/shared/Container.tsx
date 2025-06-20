@@ -1,3 +1,4 @@
+// app/shared/Container.tsx
 import React from 'react';
 import { SafeAreaView, StyleSheet } from 'react-native';
 

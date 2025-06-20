@@ -1,3 +1,4 @@
+// app/trip_summary.tsx
 import React, { useState, useRef } from "react";
 import {
   View,

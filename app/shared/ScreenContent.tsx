@@ -1,3 +1,4 @@
+// app/shared/ScreenContent.tsx
 import { Text, View } from 'react-native';
 import EditScreenInfo from './EditScreenInfo';
 

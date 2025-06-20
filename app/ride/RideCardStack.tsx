@@ -1,3 +1,4 @@
+// app/ride/RideCardStack.tsx
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
 import FloatingRideCard, { FloatingRideCardProps } from './FloatingRideCard';

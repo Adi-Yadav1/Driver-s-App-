@@ -300,6 +300,8 @@
 // });
 
 
+
+// app/ride-accepted.tsx
 import { useRouter } from "expo-router";
 import React, { useRef } from "react";
 import {

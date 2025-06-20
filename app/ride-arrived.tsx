@@ -160,6 +160,8 @@
 // });
 
 
+
+// app/ride-arrived.tsx
 import { useRouter } from "expo-router";
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
