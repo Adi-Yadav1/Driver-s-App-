@@ -1,29 +1,28 @@
-// Screens/VehicleDetailsScreen.tsx
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, TextInput, Image, Alert, Linking } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, Image, Alert, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 
-const VehicleDetailsScreen: React.FC = () => {
+const RegistrationCertificateScreen: React.FC = () => {
   const router = useRouter();
-  const [numberPlate, setNumberPlate] = useState('');
-  const [vehiclePhotoUri, setVehiclePhotoUri] = useState<string | null>(null);
+  const [documentUri, setDocumentUri] = useState<string | null>(null);
   const [isDeclared, setIsDeclared] = useState(false);
 
-  // Check if the Proceed button should be enabled
-  const isProceedEnabled = numberPlate.trim().length > 0 && vehiclePhotoUri !== null && isDeclared;
+  // Check if the proceed button should be enabled
+  const isProceedEnabled = documentUri !== null && isDeclared;
 
   const handleClose = () => {
     console.log('Close button pressed');
-    router.back(); 
+    router.back(); // Navigate back to the previous screen
   };
 
-  const handleChoosePhoto = async () => {
-    // Request media library permissions first
+  const handleUploadDocument = async () => {
+    // Request permissions for media library and camera
     const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
 
+    // If permissions are not granted, alert the user and offer to open settings
     if (mediaLibraryStatus !== 'granted' && cameraStatus !== 'granted') {
       Alert.alert(
         'Permission Required',
@@ -33,12 +32,13 @@ const VehicleDetailsScreen: React.FC = () => {
           { text: 'Open Settings', onPress: () => Linking.openSettings() },
         ]
       );
-      return;
+      return; // Exit if permissions are not granted
     }
 
+    // Prompt user to choose between taking a photo or selecting from gallery
     Alert.alert(
-      'Upload Photo',
-      'Choose an option to upload your vehicle photo.',
+      'Upload Document',
+      'Choose an option to upload your Registration Certificate.',
       [
         {
           text: 'Take Photo',
@@ -46,12 +46,12 @@ const VehicleDetailsScreen: React.FC = () => {
             let result = await ImagePicker.launchCameraAsync({
               mediaTypes: ImagePicker.MediaTypeOptions.Images,
               allowsEditing: true,
-              aspect: [4, 3],
+              aspect: [4, 3], // Standard aspect ratio for documents
               quality: 1,
             });
 
             if (!result.canceled) {
-              setVehiclePhotoUri(result.assets[0].uri);
+              setDocumentUri(result.assets[0].uri); // Set the URI of the captured image
             }
           },
         },
@@ -61,31 +61,30 @@ const VehicleDetailsScreen: React.FC = () => {
             let result = await ImagePicker.launchImageLibraryAsync({
               mediaTypes: ImagePicker.MediaTypeOptions.Images,
               allowsEditing: true,
-              aspect: [4, 3],
+              aspect: [4, 3], // Standard aspect ratio for documents
               quality: 1,
             });
 
             if (!result.canceled) {
-              setVehiclePhotoUri(result.assets[0].uri);
+              setDocumentUri(result.assets[0].uri); // Set the URI of the selected image
             }
           },
         },
-        { text: 'Cancel', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' }, 
       ]
     );
   };
 
   const handleProceed = () => {
     if (isProceedEnabled) {
-      console.log('Proceeding with:', { numberPlate, vehiclePhotoUri, isDeclared });
-      Alert.alert('Success', 'Vehicle details submitted!');
-      // CORRECTED PATH: Use '/Screens/VehicleInformationScreen'
+      console.log('Proceeding with RC:', { documentUri, isDeclared });
+      Alert.alert('Success', 'Registration Certificate submitted successfully!');
       router.replace({ 
         pathname: '/DriverRegisterScreens/VehicleInformationScreen', 
-        params: { vehicleDetailsCompleted: 'true' } 
+        params: { RCCompleted: 'true' }
       });
     } else {
-      Alert.alert('Missing Information', 'Please fill in all details and upload a photo to proceed.');
+      Alert.alert('Missing Information', 'Please upload the document and agree to the declaration to proceed.');
     }
   };
 
@@ -100,40 +99,18 @@ const VehicleDetailsScreen: React.FC = () => {
         </View>
 
         {/* Header Title and Subtitle */}
-        <Text style={styles.headerTitleCentered}>Vehicle details</Text>
+        <Text style={styles.headerTitleCentered}>Registration Certificate (RC)</Text>
         <Text style={styles.subtitleCentered}>
-          Enter the number plate details of the vehicle along with a
-          photo clearly showing the number plate.
+          Do not upload photo of printout or photocopy. Registration
+          certificate from m-Parivahan is allowed.
         </Text>
 
-        {/* Number Plate Input */}
-        <Text style={styles.inputLabel}>Enter Your Vehicle Number plate Number</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="HR 45 B 1234"
-          placeholderTextColor="#9CA3AF"
-          value={numberPlate}
-          onChangeText={setNumberPlate}
-          autoCapitalize="characters" // Number plates are often uppercase
-        />
-
-        {/* Photo Upload Section */}
-        <Text style={styles.inputLabel}>Upload the photo of the vehicle</Text>
-        <TouchableOpacity style={styles.photoUploadContainer} onPress={handleChoosePhoto}>
-          {vehiclePhotoUri ? (
-            // Display the actual uploaded image
-            <Image source={{ uri: vehiclePhotoUri }} style={styles.uploadedImage} resizeMode="cover" />
-          ) : (
-            // Display your custom placeholder image
-            <>
-              <Image 
-                source={require('../../assets/images/PhotoUploadIcon.png')} // Your custom icon
-                style={styles.photoPlaceholderIcon} // Apply new style for size
-                resizeMode="contain"
-              />
-              <Text style={styles.photoUploadText}>VEHICLE PHOTO</Text>
-            </>
-          )}
+        {/* Upload Document Field */}
+        <TouchableOpacity style={styles.uploadField} onPress={handleUploadDocument}>
+          <Text style={styles.uploadFieldText}>
+            {documentUri ? 'Document Uploaded' : 'Upload Document'}
+          </Text>
+          <Image source={require('../../assets/images/attachmentIcon.png')}/>
         </TouchableOpacity>
 
         {/* Declaration Checkbox */}
@@ -148,6 +125,34 @@ const VehicleDetailsScreen: React.FC = () => {
             I hereby declare that the information provided is true and correct.
           </Text>
         </TouchableOpacity>
+
+        {/* Document Preview and Checkmarks */}
+        <View style={styles.imagePreviewContainer}>
+          {documentUri ? (
+            <Image source={{ uri: documentUri }} style={styles.uploadedDocumentImage} resizeMode="contain" />
+          ) : (
+            <Image 
+              source={require('../../assets/images/RCPlaceholder0.png')}
+              style={styles.uploadedDocumentImage} 
+              resizeMode="contain" 
+            />
+          )}
+          <View style={styles.checkmarkRow}>
+            {/* Replaced Ionicons with Image for Clear Image */}
+            <Image
+              source={require('../../assets/images/blueCheckMark.png')} // Assuming this path for a green checkmark circle
+              style={styles.checkmarkImage}
+            />
+            <Text style={styles.checkmarkText}>Clear Image</Text>
+          </View>
+          <View style={styles.checkmarkRow}>
+            <Image
+              source={require('../../assets/images/blueCheckMark.png')}
+              style={styles.checkmarkImage}
+            />
+            <Text style={styles.checkmarkText}>Cropped Correctly</Text>
+          </View>
+        </View>
 
         {/* Proceed Button */}
         <View style={styles.bottomButtonContainer}>
@@ -198,7 +203,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   subtitleCentered: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '400',
     color: 'rgba(43, 43, 43, 0.5)',
     textAlign: 'center',
@@ -206,81 +211,79 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     paddingHorizontal: 10,
   },
-  inputLabel: {
-    fontSize: 16,
-    fontWeight: '400',
-    color: 'rgba(28, 27, 31, 1)',
-    marginBottom: 10,
-    marginTop: 15,
-    marginLeft: 18,
-  },
-  textInput: {
+  uploadField: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 1)',
     borderRadius: 8,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    marginHorizontal: 10,
-    fontSize: 16,
-    color: 'rgba(0, 0, 0, 0.28)',
     marginBottom: 20,
     backgroundColor: 'rgba(236, 236, 236, 0.5)',
   },
-  photoUploadContainer: {
-    borderWidth: 2,
-    borderColor: 'rgba(12, 35, 83, 1)',
-    borderStyle: 'dashed',
-    borderRadius: 10,
-    marginHorizontal: 10,
-    height: 180, // Fixed height for the photo upload area
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    marginBottom: 20, 
-    overflow: 'hidden', 
-  },
-  uploadedImage: {
-    width: '100%',
-    height: '100%',
-  },
-  photoPlaceholderIcon: {
-    width: 75,
-    height: 75,
-    borderRadius: 25,
-  },
-  photoUploadText: {
-    fontSize: 14,
-    color: 'rgba(0, 0, 0, 1)',
-    fontWeight: '400',
-    marginTop: 10,
+  uploadFieldText: {
+    fontSize: 16,
+    color: 'rgba(0, 0, 0, 0.28)', // Lighter color for placeholder-like text
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
-    paddingRight: 20,
-    marginLeft: '2%',
-    flex: 1,
+    marginBottom: 20,
+    paddingRight: 10,
   },
   checkboxIcon: {
     marginRight: 10,
   },
   checkboxText: {
-    flex: 1, 
+    flex: 1,
     fontSize: 12,
     color: '#333',
     fontWeight: '400',
     lineHeight: 20,
   },
+  imagePreviewContainer: {
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    borderRadius: 8,
+    padding: 15,
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
+    marginBottom: 270,
+    // flex: 1,
+  },
+  uploadedDocumentImage: {
+    width: '100%',
+    height: 150, 
+    marginBottom: 15,
+  },
+  checkmarkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 8,
+  },
+  checkmarkImage: { 
+    width: 20, 
+    height: 20, 
+    marginRight: 10,
+  },
+  checkmarkText: {
+    fontSize: 14,
+    color: '#333',
+    marginLeft: 0, 
+  },
   bottomButtonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 50, 
   },
   proceedButton: {
     backgroundColor: '#0C2353',
     paddingVertical: 15,
-    borderRadius: 8,
+    borderRadius: 10,
     width: '100%',
     alignItems: 'center',
   },
@@ -294,4 +297,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VehicleDetailsScreen;
+export default RegistrationCertificateScreen;
