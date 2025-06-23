@@ -4,25 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 
-const RegistrationCertificateScreen: React.FC = () => {
+const PermitScreen: React.FC = () => {
   const router = useRouter();
-  const [documentUri, setDocumentUri] = useState<string | null>(null);
+  const [bhagAImageUri, setBhagAImageUri] = useState<string | null>(null);
+  const [bhagBImageUri, setBhagBImageUri] = useState<string | null>(null);
   const [isDeclared, setIsDeclared] = useState(false);
 
   // Check if the proceed button should be enabled
-  const isProceedEnabled = documentUri !== null && isDeclared;
+  const isProceedEnabled = bhagAImageUri !== null && bhagBImageUri !== null && isDeclared;
 
   const handleClose = () => {
     console.log('Close button pressed');
-    router.back(); // Navigate back to the previous screen
+    router.back(); 
   };
 
-  const handleUploadDocument = async () => {
-    // Request permissions for media library and camera
+  const handleUploadImage = async (setUri: React.Dispatch<React.SetStateAction<string | null>>, photoType: string) => {
     const { status: mediaLibraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
 
-    // If permissions are not granted, alert the user and offer to open settings
     if (mediaLibraryStatus !== 'granted' && cameraStatus !== 'granted') {
       Alert.alert(
         'Permission Required',
@@ -32,13 +31,12 @@ const RegistrationCertificateScreen: React.FC = () => {
           { text: 'Open Settings', onPress: () => Linking.openSettings() },
         ]
       );
-      return; // Exit if permissions are not granted
+      return;
     }
 
-    // Prompt user to choose between taking a photo or selecting from gallery
     Alert.alert(
-      'Upload Document',
-      'Choose an option to upload your Registration Certificate.',
+      `Upload ${photoType} Image`,
+      `Choose an option to upload your ${photoType} image.`,
       [
         {
           text: 'Take Photo',
@@ -46,12 +44,12 @@ const RegistrationCertificateScreen: React.FC = () => {
             let result = await ImagePicker.launchCameraAsync({
               mediaTypes: ImagePicker.MediaTypeOptions.Images,
               allowsEditing: true,
-              aspect: [4, 3], // Standard aspect ratio for documents
+              aspect: [4, 3],
               quality: 1,
             });
 
             if (!result.canceled) {
-              setDocumentUri(result.assets[0].uri); // Set the URI of the captured image
+              setUri(result.assets[0].uri);
             }
           },
         },
@@ -61,30 +59,30 @@ const RegistrationCertificateScreen: React.FC = () => {
             let result = await ImagePicker.launchImageLibraryAsync({
               mediaTypes: ImagePicker.MediaTypeOptions.Images,
               allowsEditing: true,
-              aspect: [4, 3], // Standard aspect ratio for documents
+              aspect: [4, 3],
               quality: 1,
             });
 
             if (!result.canceled) {
-              setDocumentUri(result.assets[0].uri); // Set the URI of the selected image
+              setUri(result.assets[0].uri);
             }
           },
         },
-        { text: 'Cancel', style: 'cancel' }, 
+        { text: 'Cancel', style: 'cancel' },
       ]
     );
   };
 
   const handleProceed = () => {
     if (isProceedEnabled) {
-      console.log('Proceeding with RC:', { documentUri, isDeclared });
-      Alert.alert('Success', 'Registration Certificate submitted successfully!');
+      console.log('Proceeding with Permit:', { bhagAImageUri, bhagBImageUri, isDeclared });
+      Alert.alert('Success', 'Permit details submitted successfully!');
       router.replace({ 
         pathname: '/DriverRegisterScreens/VehicleInformationScreen', 
-        params: { RCCompleted: 'true' }
+        params: { PermitCompleted: 'true' } 
       });
     } else {
-      Alert.alert('Missing Information', 'Please upload the document and agree to the declaration to proceed.');
+      Alert.alert('Missing Information', 'Please upload both permit images and agree to the declaration to proceed.');
     }
   };
 
@@ -98,19 +96,40 @@ const RegistrationCertificateScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Header Title and Subtitle */}
-        <Text style={styles.headerTitleCentered}>Registration Certificate (RC)</Text>
-        <Text style={styles.subtitleCentered}>
-          Do not upload photo of printout or photocopy. Registration
-          certificate from m-Parivahan is allowed.
-        </Text>
+        {/* Header Title */}
+        <Text style={styles.headerTitleCentered}>Permit</Text>
+        
+        {/* Upload Permit Images Section Label */}
+        <Text style={styles.uploadPermitLabel}>Upload Permit Images</Text>
 
-        {/* Upload Document Field */}
-        <TouchableOpacity style={styles.uploadField} onPress={handleUploadDocument}>
-          <Text style={styles.uploadFieldText}>
-            {documentUri ? 'Document Uploaded' : 'Upload Document'}
-          </Text>
-          <Image source={require('../../assets/images/attachmentIcon.png')}/>
+        {/* BHAG A Upload Container */}
+        <TouchableOpacity 
+          style={styles.imageUploadBox} 
+          onPress={() => handleUploadImage(setBhagAImageUri, 'BHAG A')}
+        >
+          {bhagAImageUri ? (
+            <Image source={{ uri: bhagAImageUri }} style={styles.uploadedImage} resizeMode="cover" />
+          ) : (
+            <>
+              <Ionicons name="camera-outline" size={30} color="#0C2353" />
+              <Text style={styles.uploadBoxText}>BHAG A</Text>
+            </>
+          )}
+        </TouchableOpacity>
+
+        {/* BHAG B Upload Container */}
+        <TouchableOpacity 
+          style={styles.imageUploadBox} 
+          onPress={() => handleUploadImage(setBhagBImageUri, 'BHAG B')}
+        >
+          {bhagBImageUri ? (
+            <Image source={{ uri: bhagBImageUri }} style={styles.uploadedImage} resizeMode="cover" />
+          ) : (
+            <>
+              <Ionicons name="camera-outline" size={30} color="#0C2353" />
+              <Text style={styles.uploadBoxText}>BHAG B</Text>
+            </>
+          )}
         </TouchableOpacity>
 
         {/* Declaration Checkbox */}
@@ -125,34 +144,6 @@ const RegistrationCertificateScreen: React.FC = () => {
             I hereby declare that the information provided is true and correct.
           </Text>
         </TouchableOpacity>
-
-        {/* Document Preview and Checkmarks */}
-        <View style={styles.imagePreviewContainer}>
-          {documentUri ? (
-            <Image source={{ uri: documentUri }} style={styles.uploadedDocumentImage} resizeMode="contain" />
-          ) : (
-            <Image 
-              source={require('../../assets/images/RCPlaceholder0.png')}
-              style={styles.uploadedDocumentImage} 
-              resizeMode="contain" 
-            />
-          )}
-          <View style={styles.checkmarkRow}>
-            {/* Replaced Ionicons with Image for Clear Image */}
-            <Image
-              source={require('../../assets/images/blueCheckMark.png')} // Assuming this path for a green checkmark circle
-              style={styles.checkmarkImage}
-            />
-            <Text style={styles.checkmarkText}>Clear Image</Text>
-          </View>
-          <View style={styles.checkmarkRow}>
-            <Image
-              source={require('../../assets/images/blueCheckMark.png')}
-              style={styles.checkmarkImage}
-            />
-            <Text style={styles.checkmarkText}>Cropped Correctly</Text>
-          </View>
-        </View>
 
         {/* Proceed Button */}
         <View style={styles.bottomButtonContainer}>
@@ -200,38 +191,38 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: 'rgba(0, 0, 0, 1)',
     textAlign: 'center',
-    marginBottom: 20,
-  },
-  subtitleCentered: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: 'rgba(43, 43, 43, 0.5)',
-    textAlign: 'center',
-    lineHeight: 20,
     marginBottom: 30,
-    paddingHorizontal: 10,
   },
-  uploadField: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 1)',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    marginBottom: 20,
-    backgroundColor: 'rgba(236, 236, 236, 0.5)',
-  },
-  uploadFieldText: {
+  uploadPermitLabel: {
     fontSize: 16,
-    fontWeight: '400',
-    color: 'rgba(64, 64, 64, 1)',
+    fontWeight: '500',
+    color: 'rgba(0, 0, 0, 1)',
+    marginBottom: 15,
+  },
+  imageUploadBox: {
+    borderWidth: 2,
+    borderColor: 'rgba(0, 0, 0, 1)',
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    height: 150,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    overflow: 'hidden', // Ensure image doesn't overflow rounded corners
+  },
+  uploadedImage: {
+    width: '100%',
+    height: '100%',
+  },
+  uploadBoxText: {
+    fontSize: 16,
+    color: 'rgba(0, 0, 0, 1)',
+    marginTop: 10,
   },
   checkboxContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
     paddingRight: 10,
   },
   checkboxIcon: {
@@ -244,43 +235,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 20,
   },
-  imagePreviewContainer: {
-    borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: 8,
-    padding: 15,
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: 'rgba(217, 217, 217, 0.26)',
-    marginBottom: 270,
-    // flex: 1,
-  },
-  uploadedDocumentImage: {
-    width: '100%',
-    height: 150, 
-    marginBottom: 15,
-  },
-  checkmarkRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: 8,
-  },
-  checkmarkImage: { 
-    width: 20, 
-    height: 20, 
-    marginRight: 10,
-  },
-  checkmarkText: {
-    fontSize: 14,
-    fontWeight: '400',
-    color: '#333',
-    marginLeft: 0, 
-  },
   bottomButtonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 50, 
+    marginBottom: 50,
   },
   proceedButton: {
     backgroundColor: '#0C2353',
@@ -299,4 +257,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationCertificateScreen;
+export default PermitScreen;

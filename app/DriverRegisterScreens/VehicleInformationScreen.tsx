@@ -17,20 +17,20 @@ import {
 
 const VehicleInformationScreen: React.FC = () => {
   const router = useRouter();
-  const localSearchParams = useLocalSearchParams(); // Get params from the current route
+  const localSearchParams = useLocalSearchParams();
 
   // State to track if Vehicle Details are completed
   const [isVehicleDetailsCompleted, setIsVehicleDetailsCompleted] =
     useState(false);
   const [isRCCompleted, setIsRCCompleted] = useState(false);
+  const [isPermitCompleted, setIsPermitCompleted] = useState(false);
 
   useEffect(() => {
-    // Check if the vehicleDetailsCompleted param is present and true
     if (localSearchParams.vehicleDetailsCompleted === "true") {
       setIsVehicleDetailsCompleted(true);
       router.setParams({ vehicleDetailsCompleted: undefined });
     }
-  }, [localSearchParams.vehicleDetailsCompleted]); // Depend on the specific param
+  }, [localSearchParams.vehicleDetailsCompleted]);
 
   useEffect(() => {
     if (localSearchParams.RCCompleted === "true") {
@@ -43,6 +43,13 @@ const VehicleInformationScreen: React.FC = () => {
     console.log("Close button pressed");
     router.back();
   };
+
+  useEffect(()=>{
+    if(localSearchParams.PermitCompleted === 'true'){
+      setIsPermitCompleted(true);
+      router.setParams({PermitCompleted: undefined});
+    }
+  }, [localSearchParams.PermitCompleted]);
 
   const handleItemPress = (item: string) => {
     console.log(`${item} pressed`);
@@ -58,7 +65,7 @@ const VehicleInformationScreen: React.FC = () => {
         });
         break;
       case "Permit":
-        router.push({ pathname: "/" as RelativePathString });
+        router.push({ pathname: "/DriverRegisterScreens/PermitScreen" as RelativePathString });
         break;
       case "Vehicle Insurance":
         router.push({ pathname: "/" as RelativePathString });
@@ -128,11 +135,19 @@ const VehicleInformationScreen: React.FC = () => {
             )}
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.listItem}
+            style={[styles.listItem, isPermitCompleted && styles.listItemCompleted]}
             onPress={() => handleItemPress("Permit")}
           >
             <Text style={styles.listItemText}>Permit</Text>
-            <Ionicons name="arrow-forward" size={24} color="#0C2353" />
+            {isPermitCompleted?(
+              <Image
+              source={require('../../assets/images/BlueTick.png')}
+              style={styles.completedIcon}
+              resizeMode="contain"
+              />
+            ):(
+              <Ionicons name="arrow-forward" size={24} color="#0C2353" />
+            )}
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.listItem}
