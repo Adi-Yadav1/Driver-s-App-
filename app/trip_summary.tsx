@@ -57,7 +57,7 @@ const TripSummaryScreen: React.FC = () => {
   };
 
   // Check if the continue button should be enabled
-  const isButtonEnabled = rating > 0 && countWords(feedback) >= 10;
+  const isButtonEnabled = rating > 0 && countWords(feedback) >= 2;
 
   const handleRatingPress = (selectedRating: number) => {
     setRating(selectedRating);
@@ -71,6 +71,7 @@ const TripSummaryScreen: React.FC = () => {
     if (isButtonEnabled) {
       // Implement navigation or submission logic here
       console.log("Trip Completed! Rating:", rating, "Feedback:", feedback);
+      router.push("/bonus_insentive")
       // Navigate to CurrentRideScreen
     }
   };

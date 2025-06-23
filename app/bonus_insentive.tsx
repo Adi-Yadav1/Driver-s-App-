@@ -1,25 +1,40 @@
 // app/bonus_insentive.tsx
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialIcons, FontAwesome, Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import { goBack } from 'expo-router/build/global-state/routing';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { MaterialIcons, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { goBack } from "expo-router/build/global-state/routing";
 
 export default function App() {
-     const handlePress = () => {
-        router.push('../BalanceScreen');
-     };
+  const handlePress = () => {
+    router.push("../BalanceScreen");
+  };
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Earn an Extra ₹200 for 7 bookings</Text>
+          <Text style={styles.headerTitle}>
+            Earn an Extra ₹200 for 7 bookings
+          </Text>
           <View style={styles.timeBox}>
-            <MaterialIcons name="access-time" size={16} color="#fff" />
+            <MaterialIcons name="access-time" size={16} color="green" />
             <Text style={styles.timeText}>12:00 PM - 11:59 PM</Text>
           </View>
+          <Image
+            source={require("../assets/images/image.png")}
+            resizeMode="contain"
+            style={styles.headerImage}
+          />
         </View>
 
         {/* Earnings */}
@@ -38,20 +53,26 @@ export default function App() {
             <Text style={styles.cardFooter}>5 more bookings to go</Text>
           </View>
 
-          {[{ amount: 340, total: 13 }, { amount: 450, total: 18 }, { amount: 570, total: 25 }].map(
-            (item, index) => (
-              <View key={index} style={styles.card}>
-                <Text style={styles.cardTitle}>Earn an extra ₹{item.amount}</Text>
-                <Text style={styles.cardSubtitle}>0/{item.total} bookings</Text>
-              </View>
-            )
-          )}
+          {[
+            { amount: 340, total: 13 },
+            { amount: 450, total: 18 },
+            { amount: 570, total: 25 },
+          ].map((item, index) => (
+            <View key={index} style={styles.card}>
+              <Text style={styles.cardTitle}>Earn an extra ₹{item.amount}</Text>
+              <Text style={styles.cardSubtitle}>0/{item.total} bookings</Text>
+            </View>
+          ))}
 
           <View style={styles.detailsContainer}>
             <Text style={styles.detailsTitle}>Details</Text>
             <Text style={styles.detail}>• Trips must begin in Delhi(NCR).</Text>
-            <Text style={styles.detail}>• This offer only applies to completed rides.</Text>
-            <Text style={styles.detail}>• This offer is only for limited period.</Text>
+            <Text style={styles.detail}>
+              • This offer only applies to completed rides.
+            </Text>
+            <Text style={styles.detail}>
+              • This offer is only for limited period.
+            </Text>
           </View>
         </ScrollView>
 
@@ -61,7 +82,7 @@ export default function App() {
             <Ionicons name="home-outline" size={22} color="#333" />
             <Text style={styles.navText}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={goBack} >
+          <TouchableOpacity style={styles.navItem} onPress={goBack}>
             <FontAwesome name="gift" size={22} color="#333" />
             <Text style={styles.navText}>Bonus</Text>
           </TouchableOpacity>
@@ -82,85 +103,96 @@ export default function App() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f3f3f3',
+    backgroundColor: "#f3f3f3",
   },
   container: {
     flex: 1,
-    backgroundColor: '#f3f3f3',
+    backgroundColor: "#f3f3f3",
   },
   header: {
-    backgroundColor: '#1f2a4d',
+    backgroundColor: "#1f2a4d",
     padding: 16,
+    height: 151,
+    position: "relative", // Allows absolute positioning of the image
   },
   headerTitle: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: "#fff",
+    fontSize: 26,
+    fontWeight: "600",
   },
   timeBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 6,
-    backgroundColor: '#2e3b60',
+    backgroundColor: "#2e3b60",
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 6,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   timeText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 12,
     marginLeft: 4,
   },
+  headerImage: {
+    position: "absolute",
+    bottom: 5,
+    right: 10,
+    width: 80,
+    height: 80,
+  },
   earningsContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#D9D9D9",
     padding: 16,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderBottomWidth: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   earningsLabel: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#555',
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#0C2353",
   },
   earningsAmount: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#000',
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#0C2353",
   },
   incentivesContainer: {
     padding: 16,
   },
   incentivesTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#007aff',
+    fontWeight: "bold",
+    color: "#007aff",
     marginBottom: 8,
   },
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     padding: 14,
     borderRadius: 10,
     marginBottom: 12,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
   },
   cardTitle: {
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   cardSubtitle: {
     fontSize: 13,
-    color: '#666',
+    color: "#666",
     marginTop: 4,
   },
   cardFooter: {
     fontSize: 13,
-    color: '#007aff',
+    color: "#007aff",
     marginTop: 4,
   },
   detailsContainer: {
@@ -168,28 +200,28 @@ const styles = StyleSheet.create({
   },
   detailsTitle: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 6,
   },
   detail: {
     fontSize: 13,
-    color: '#555',
+    color: "#555",
     marginBottom: 2,
   },
   navbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    flexDirection: "row",
+    justifyContent: "space-around",
     paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderTopColor: '#ccc',
+    backgroundColor: "#fff",
+    borderTopColor: "#ccc",
     borderTopWidth: 1,
   },
   navItem: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   navText: {
     fontSize: 12,
     marginTop: 2,
-    color: '#333',
+    color: "#333",
   },
 });

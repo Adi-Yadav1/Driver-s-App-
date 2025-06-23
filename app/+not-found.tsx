@@ -8,9 +8,9 @@ export default function NotFoundScreen() {
     <>
       <Stack.Screen options={{ title: 'Oops!' }} />
       <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.title}>This screen does not exist.</ThemedText>
+        <ThemedText style={styles.title}>This screen does not exist.</ThemedText>
         <Link href="/DriverRegisterScreens/RegisterVehicleScreen" style={styles.link}>
-          <ThemedText type="link" style={styles.linkText}>Go to home screen!</ThemedText>
+          <ThemedText style={styles.linkText}>Go to home screen!</ThemedText>
         </Link>
       </ThemedView>
     </>

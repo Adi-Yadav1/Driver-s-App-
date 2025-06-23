@@ -10,9 +10,10 @@ import {
   Image,
 } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { goBack } from "expo-router/build/global-state/routing";
 
 const BalanceScreen = () => {
-  const balance = 378.83; // You can make this dynamic from props/state/backend
+  const balance = -378.83; // You can make this dynamic from props/state/backend
 
   const isPositiveBalance = balance > 0;
   const balanceColor = isPositiveBalance ? "green" : "red";
@@ -33,16 +34,16 @@ const BalanceScreen = () => {
 
           {/* Warning or Info Card */}
           <View style={styles.warningCard}>
-            <View style = {styles.warning}>
-            <Image
-              source={require("../assets/images/balance.png")}
-              resizeMode="contain"
-            />
-            <Text style={styles.warningText}>
-              {isPositiveBalance
-                ? "You have a positive balance.\nYou can withdraw your earnings."
-                : "You have negative balance\nTake more rides to automatically repay or make a payment."}
-            </Text>
+            <View style={styles.warning}>
+              <Image
+                source={require("../assets/images/balance.png")}
+                resizeMode="contain"
+              />
+              <Text style={styles.warningText}>
+                {isPositiveBalance
+                  ? "You have a positive balance.\nYou can withdraw your earnings."
+                  : "You have negative balance\nTake more rides to automatically repay or make a payment."}
+              </Text>
             </View>
             <TouchableOpacity style={styles.payButton}>
               <Text style={styles.payButtonText}>
@@ -54,7 +55,7 @@ const BalanceScreen = () => {
           </View>
 
           {/* Current Plan */}
-          <View style={styles.section}>
+          <View style={styles.currentplan}>
             <Text style={styles.sectionTitle}>Current Plan</Text>
             <View style={styles.planContainer}>
               <TouchableOpacity style={styles.planButton}>
@@ -62,8 +63,11 @@ const BalanceScreen = () => {
                 <Text style={styles.planText}>1 day</Text>
                 <Text style={styles.planText}>₹50</Text>
               </TouchableOpacity>
-              <Text style={styles.choosePlanText}>Choose Other Plan &gt;</Text>
             </View>
+            <Text style={styles.choosePlanText}>Choose Other Plan &gt;</Text>
+          </View>
+          <View style= {{marginBottom: 10}}>
+            <Text style = {{fontSize: 18, fontWeight: 'bold' , color: '#000000'}}>Balance History</Text>
           </View>
 
           {/* Ride History */}
@@ -118,9 +122,10 @@ const BalanceScreen = () => {
             <Ionicons name="home" size={22} color="#000" />
             <Text style={styles.tabLabel}>Home</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.tabItem}>
+          <TouchableOpacity style={styles.tabItem} onPress={goBack}>
             <Ionicons name="gift-outline" size={22} color="#000" />
             <Text style={styles.tabLabel}>Bonus</Text>
+
           </TouchableOpacity>
           <TouchableOpacity style={styles.tabItem}>
             <Ionicons name="pricetags-outline" size={22} color="#000" />
@@ -147,9 +152,14 @@ const styles = StyleSheet.create({
   innerContainer: {
     flex: 1,
   },
-  warning:{
-    flex: 1 , 
-    flexDirection: 'row',
+  currentplan: {
+    flex: 1,
+    flexDirection: "column",
+    height: 140,
+  },
+  warning: {
+    flex: 1,
+    flexDirection: "row",
   },
   scrollContainer: {
     padding: 16,
@@ -177,19 +187,18 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 2,
     marginBottom: 20,
-    
   },
   warningText: {
     fontSize: 14,
     marginBottom: 10,
     color: "#333",
+    width: 250,
   },
   payButton: {
     backgroundColor: "#0b2f5b",
     padding: 10,
     borderRadius: 8,
     alignItems: "center",
-    
   },
   payButtonText: {
     color: "#fff",
@@ -205,35 +214,46 @@ const styles = StyleSheet.create({
   },
   planContainer: {
     flexDirection: "row",
+
     justifyContent: "space-between",
     alignItems: "center",
   },
   planButton: {
     borderWidth: 1,
+    width: "100%",
     borderColor: "#0b2f5b",
-    borderRadius: 20,
+    borderRadius: 10,
     paddingHorizontal: 20,
     paddingVertical: 10,
     flexDirection: "row",
-    gap: 10,
+    justifyContent: "space-between",
   },
   planText: {
     color: "#0b2f5b",
     fontWeight: "600",
   },
   choosePlanText: {
-    color: "#0b2f5b",
+    color: "#000000",
     fontWeight: "500",
+    position: "absolute",
+    right: 0,
+    fontSize: 13,
+    bottom: 20,
   },
+  
+
   itemRow: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
+    borderColor: "#CDCDCD",
+    borderWidth: 1, // 👈 Add this line
     padding: 12,
     borderRadius: 10,
     marginBottom: 10,
     justifyContent: "space-between",
   },
+
   itemLabel: {
     flex: 1,
     marginLeft: 10,
