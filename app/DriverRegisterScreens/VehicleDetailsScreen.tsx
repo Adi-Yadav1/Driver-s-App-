@@ -232,11 +232,11 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     borderRadius: 10,
     marginHorizontal: 10,
-    height: 180, // Fixed height for the photo upload area
+    height: 180,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-    marginBottom: 20, 
+    marginBottom: -140, 
     overflow: 'hidden', 
   },
   uploadedImage: {
