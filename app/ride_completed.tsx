@@ -184,7 +184,7 @@ const RideCompletedScreen = () => {
               ) : (
                 <>
                   <Text style={styles.modalText}>
-                    Please tell us why you want to cancel:
+                    Please tell us why you wand end ride early:
                   </Text>
                   <TextInput
                     style={styles.textInput}
